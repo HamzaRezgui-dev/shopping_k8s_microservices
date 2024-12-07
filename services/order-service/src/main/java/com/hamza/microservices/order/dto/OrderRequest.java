@@ -7,8 +7,6 @@ import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 public record OrderRequest(
-        @NotBlank(message = "Order number is required")
-        String orderNumber,
         @NotBlank(message = "SKU code is required")
         String skuCode,
         @NotNull(message = "Quantity is required")

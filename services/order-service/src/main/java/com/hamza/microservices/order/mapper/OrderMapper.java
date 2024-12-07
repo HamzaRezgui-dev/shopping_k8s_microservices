@@ -5,6 +5,8 @@ import com.hamza.microservices.order.dto.OrderResponse;
 import com.hamza.microservices.order.model.Order;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class OrderMapper {
 
@@ -20,7 +22,7 @@ public class OrderMapper {
 
     public Order toOrder(OrderRequest request) {
         return new Order(
-            request.orderNumber(),
+            UUID.randomUUID().toString(),
             request.skuCode(),
             request.price(),
             request.quantity()
