@@ -19,11 +19,11 @@ public class OrderMapper {
     }
 
     public Order toOrder(OrderRequest request) {
-        return Order.builder()
-                .orderNumber(request.orderNumber())
-                .skuCode(request.skuCode())
-                .quantity(request.quantity())
-                .price(request.price())
-                .build();
+        return new Order(
+            request.orderNumber(),
+            request.skuCode(),
+            request.price(),
+            request.quantity()
+        );
     }
 }
