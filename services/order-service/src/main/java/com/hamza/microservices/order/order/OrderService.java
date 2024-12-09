@@ -1,5 +1,7 @@
 package com.hamza.microservices.order.order;
 
+import com.hamza.microservices.order.client.InventoryClient;
+import com.hamza.microservices.order.exception.StockNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +13,20 @@ import java.util.stream.Collectors;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
+    private final InventoryClient inventoryClient;
 
     public OrderResponse createOrder(OrderRequest orderRequest) {
-        Order savedOrder = orderRepository.save(orderMapper.toOrder(orderRequest));
-        return orderMapper.toOrderResponse(savedOrder);
+        var isInStock = inventoryClient.IsInStock(orderRequest.skuCode(), orderRequest.quantity());
+
+        if (isInStock) {
+            inventoryClient.deductInventory(orderRequest.skuCode(), orderRequest.quantity());
+            Order savedOrder = orderRepository.save(orderMapper.toOrder(orderRequest));
+            return orderMapper.toOrderResponse(savedOrder);
+        }
+        else {
+            throw new StockNotFoundException("Insufficient stock to fulfill the order");
+        }
+
     }
 
     public OrderResponse getOrder(Long id) {
