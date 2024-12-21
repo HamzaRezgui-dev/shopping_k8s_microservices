@@ -14,6 +14,8 @@ public record OrderRequest(
         Integer quantity,
         @NotNull(message = "Price is required")
         @Positive(message = "Price must be greater than zero")
-        BigDecimal price
+        BigDecimal price,
+        UserDetails userDetails
 ) {
+        public record UserDetails(String email, String firstName, String lastName) {}
 }
