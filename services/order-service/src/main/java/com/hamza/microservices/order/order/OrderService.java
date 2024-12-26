@@ -26,7 +26,11 @@ public class OrderService {
             Order savedOrder = orderRepository.save(orderMapper.toOrder(orderRequest));
 
             // Send the message to Kafka topic
-            OrderPlacedEvent orderPlacedEvent = new OrderPlacedEvent(savedOrder.getOrderNumber(), orderRequest.userDetails().email());
+            OrderPlacedEvent orderPlacedEvent = new OrderPlacedEvent();
+            orderPlacedEvent.setOrderNumber(savedOrder.getOrderNumber());
+            orderPlacedEvent.setEmail(orderRequest.userDetails().email());
+            orderPlacedEvent.setFirstName(orderRequest.userDetails().firstName());
+            orderPlacedEvent.setLastName(orderRequest.userDetails().lastName());
             kafkaTemplate.send("order-placed", orderPlacedEvent);
             return orderMapper.toOrderResponse(savedOrder);
         }
